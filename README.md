@@ -12,7 +12,7 @@ http://www.robots.ox.ac.uk/~vgg/publications/2015/Xie15/weidi15.pdf
 
 https://arxiv.org/abs/1505.04597
 
-To make the training easier, I added Batch Normalization to all architectures (FCRN-A and U-Net version).
+To make the training easier, I added Batch Normalization to all architectures (FCRN-A and U-Net simple version).
 Though still contains tiny difference with the original Matconvnet implementation, for instance, upsampling in Keras 
 is implemented by repeating elements, instead of bilinear upsampling. 
 So, to mimic the bilinear upsampling, I did upsampling + convolution. Also, more data augmentation needs to be added.
