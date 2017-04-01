@@ -1,6 +1,6 @@
 # cell_counting_v2
 
-The repository includes the code for training cell counting applications.
+The repository includes the code for training cell counting applications. (Keras + Tensorflow)
 
 Related Papers:
 
