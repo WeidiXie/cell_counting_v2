@@ -69,6 +69,28 @@ def _conv_bn_relu_x2(nb_filter, row, col, subsample = (1,1)):
         return act_b
     return f
 
+def FCRN_A_base(input):
+    block1 = _conv_bn_relu(32,3,3)(input)
+    pool1 = MaxPooling2D(pool_size=(2,2))(block1)
+    # =========================================================================
+    block2 = _conv_bn_relu(64,3,3)(pool1)
+    pool2 = MaxPooling2D(pool_size=(2, 2))(block2)
+    # =========================================================================
+    block3 = _conv_bn_relu(128,3,3)(pool2)
+    pool3 = MaxPooling2D(pool_size=(2, 2))(block3)
+    # =========================================================================
+    block4 = _conv_bn_relu(512,3,3)(pool3)
+    # =========================================================================
+    up5 = UpSampling2D(size=(2, 2))(block4)
+    block5 = _conv_bn_relu(128,3,3)(up5)
+    # =========================================================================
+    up6 = UpSampling2D(size=(2, 2))(block5)
+    block6 = _conv_bn_relu(64,3,3)(up6)
+    # =========================================================================
+    up7 = UpSampling2D(size=(2, 2))(block6)
+    block7 = _conv_bn_relu(32,3,3)(up7)
+    return block7
+
 def FCRN_A_base_v2(input):
     block1 = _conv_bn_relu_x2(32,3,3)(input)
     pool1 = MaxPooling2D(pool_size=(2,2))(block1)
@@ -116,6 +138,19 @@ def U_net_base(input, nb_filter = 64):
 def buildModel_FCRN_A (input_dim):
     input_ = Input (shape = (input_dim))
     # =========================================================================
+    act_ = FCRN_A_base (input_)
+    # =========================================================================
+    density_pred =  Convolution2D(1, 1, 1, bias = False, activation='linear',\
+                                  init='orthogonal',name='pred',border_mode='same')(act_)
+    # =========================================================================
+    model = Model (input = input_, output = density_pred)
+    opt = SGD(lr = 1e-2, momentum = 0.9, nesterov = True)
+    model.compile(optimizer = opt, loss = 'mse')
+    return model
+
+def buildModel_FCRN_A_v2 (input_dim):
+    input_ = Input (shape = (input_dim))
+    # =========================================================================
     act_ = FCRN_A_base_v2 (input_)
     # =========================================================================
     density_pred =  Convolution2D(1, 1, 1, bias = False, activation='linear',\
@@ -125,7 +160,7 @@ def buildModel_FCRN_A (input_dim):
     opt = SGD(lr = 1e-2, momentum = 0.9, nesterov = True)
     model.compile(optimizer = opt, loss = 'mse')
     return model
-    
+
 def buildModel_U_net (input_dim):
     input_ = Input (shape = (input_dim))
     # =========================================================================
