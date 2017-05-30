@@ -2,6 +2,9 @@
 
 The repository includes the code for training cell counting applications. (Keras + Tensorflow)
 
+Dataset can be downloaded here :
+http://www.robots.ox.ac.uk/~vgg/research/counting/index_org.html
+
 Related Papers:
 
 [1] Microscopy Cell Counting with Fully Convolutional Regression Networks.
